@@ -10,10 +10,12 @@
             background-color: #f4f4f4;
             text-align: center;
             padding: 20px;
+            margin: 0;
         }
 
         .progress-container {
-            width: 80%;
+            width: 90%;
+            max-width: 600px;
             margin: 0 auto;
             margin-bottom: 30px;
         }
@@ -58,13 +60,34 @@
             background-color: #ddd;
             cursor: not-allowed;
         }
+
+        /* Celebratory Dr. Gulkeerat style */
+        .celebratory {
+            font-weight: bold;
+            color: green;
+            font-size: 24px;
+            text-transform: uppercase;
+        }
+
+        /* Responsive adjustments for mobile */
+        @media (max-width: 600px) {
+            .progress-container {
+                width: 100%;
+                padding: 0 10px;
+            }
+
+            button {
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
     </style>
 </head>
 <body>
     <h1>Progress Tracker</h1>
 
     <div class="task">
-        <h2>Medicine</h2>
+        <h2>Medicine (<span id="medicineCount">6/9</span>)</h2>
         <div class="progress-container">
             <div class="progress-bar">
                 <div class="progress-bar-inner" id="medicineProgress">66%</div>
@@ -74,7 +97,7 @@
     </div>
 
     <div class="task">
-        <h2>Surgery Unit</h2>
+        <h2>Surgery Unit (<span id="surgeryUnitCount">3/5</span>)</h2>
         <div class="progress-container">
             <div class="progress-bar">
                 <div class="progress-bar-inner" id="surgeryUnitProgress">60%</div>
@@ -84,7 +107,7 @@
     </div>
 
     <div class="task">
-        <h2>Surgery Unit Mega Sign</h2>
+        <h2>Surgery Unit Mega Sign (<span id="surgeryMegaCount">0/1</span>)</h2>
         <div class="progress-container">
             <div class="progress-bar">
                 <div class="progress-bar-inner" id="surgeryMegaProgress">0%</div>
@@ -94,7 +117,7 @@
     </div>
 
     <div class="task">
-        <h2>Community Medicine Meetup</h2>
+        <h2>Community Medicine Meetup (<span id="communityMeetupCount">0/1</span>)</h2>
         <div class="progress-container">
             <div class="progress-bar">
                 <div class="progress-bar-inner" id="communityMeetupProgress">0%</div>
@@ -104,7 +127,7 @@
     </div>
 
     <div class="task">
-        <h2>Community Medicine</h2>
+        <h2>Community Medicine (<span id="communityCount">0/2</span>)</h2>
         <div class="progress-container">
             <div class="progress-bar">
                 <div class="progress-bar-inner" id="communityProgress">0%</div>
@@ -113,28 +136,71 @@
         <button id="communityBtn">Complete a Community Medicine Sign</button>
     </div>
 
+    <hr>
+
+    <div class="task">
+        <h2>Total Progress</h2>
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-bar-inner" id="totalProgress">0%</div>
+            </div>
+        </div>
+        <p>Starting as <strong>Intern Gulkeerat</strong></p>
+        <p id="finalTitle"></p>
+    </div>
+
     <script>
-        let medicineSigns = 6;
-        let surgeryUnitSigns = 3;
-        let surgeryMegaSigns = 0;
-        let communityMeetupDone = false;
-        let communitySigns = 0;
+        // Initial progress counts
+        let medicineSigns = parseInt(localStorage.getItem('medicineSigns')) || 6;
+        let surgeryUnitSigns = parseInt(localStorage.getItem('surgeryUnitSigns')) || 3;
+        let surgeryMegaSigns = parseInt(localStorage.getItem('surgeryMegaSigns')) || 0;
+        let communityMeetupDone = localStorage.getItem('communityMeetupDone') === 'true' || false;
+        let communitySigns = parseInt(localStorage.getItem('communitySigns')) || 0;
+
+        const totalTasks = 18; // Total number of all tasks
 
         function updateProgress() {
+            // Update individual task progress
             document.getElementById('medicineProgress').style.width = (medicineSigns / 9) * 100 + '%';
             document.getElementById('medicineProgress').textContent = Math.floor((medicineSigns / 9) * 100) + '%';
+            document.getElementById('medicineCount').textContent = medicineSigns + '/9';
 
             document.getElementById('surgeryUnitProgress').style.width = (surgeryUnitSigns / 5) * 100 + '%';
             document.getElementById('surgeryUnitProgress').textContent = Math.floor((surgeryUnitSigns / 5) * 100) + '%';
+            document.getElementById('surgeryUnitCount').textContent = surgeryUnitSigns + '/5';
 
             document.getElementById('surgeryMegaProgress').style.width = (surgeryMegaSigns / 1) * 100 + '%';
             document.getElementById('surgeryMegaProgress').textContent = Math.floor((surgeryMegaSigns / 1) * 100) + '%';
+            document.getElementById('surgeryMegaCount').textContent = surgeryMegaSigns + '/1';
 
             document.getElementById('communityMeetupProgress').style.width = communityMeetupDone ? '100%' : '0%';
             document.getElementById('communityMeetupProgress').textContent = communityMeetupDone ? '100%' : '0%';
+            document.getElementById('communityMeetupCount').textContent = communityMeetupDone ? '1/1' : '0/1';
 
             document.getElementById('communityProgress').style.width = (communitySigns / 2) * 100 + '%';
             document.getElementById('communityProgress').textContent = Math.floor((communitySigns / 2) * 100) + '%';
+            document.getElementById('communityCount').textContent = communitySigns + '/2';
+
+            // Calculate total progress
+            const completedTasks = medicineSigns + surgeryUnitSigns + surgeryMegaSigns + (communityMeetupDone ? 1 : 0) + communitySigns;
+            const totalProgressPercent = (completedTasks / totalTasks) * 100;
+
+            document.getElementById('totalProgress').style.width = totalProgressPercent + '%';
+            document.getElementById('totalProgress').textContent = Math.floor(totalProgressPercent) + '%';
+
+            // Update final title if 100%
+            if (totalProgressPercent === 100) {
+                document.getElementById('finalTitle').innerHTML = '<span class="celebratory">Congratulations! You are now Dr. Gulkeerat!</span>';
+            }
+        }
+
+        // Save to Local Storage
+        function saveProgress() {
+            localStorage.setItem('medicineSigns', medicineSigns);
+            localStorage.setItem('surgeryUnitSigns', surgeryUnitSigns);
+            localStorage.setItem('surgeryMegaSigns', surgeryMegaSigns);
+            localStorage.setItem('communityMeetupDone', communityMeetupDone);
+            localStorage.setItem('communitySigns', communitySigns);
         }
 
         // Buttons' click events to increase progress
@@ -142,6 +208,7 @@
             if (medicineSigns < 9) {
                 medicineSigns++;
                 updateProgress();
+                saveProgress();
             }
         });
 
@@ -149,6 +216,7 @@
             if (surgeryUnitSigns < 5) {
                 surgeryUnitSigns++;
                 updateProgress();
+                saveProgress();
             }
         });
 
@@ -156,22 +224,27 @@
             if (surgeryMegaSigns < 1) {
                 surgeryMegaSigns++;
                 updateProgress();
+                saveProgress();
             }
         });
 
         document.getElementById('communityMeetupBtn').addEventListener('click', function() {
-            communityMeetupDone = true;
-            updateProgress();
+            if (!communityMeetupDone) {
+                communityMeetupDone = true;
+                updateProgress();
+                saveProgress();
+            }
         });
 
         document.getElementById('communityBtn').addEventListener('click', function() {
             if (communitySigns < 2) {
                 communitySigns++;
                 updateProgress();
+                saveProgress();
             }
         });
 
-        // Initialize progress bars based on initial values
+        // Initial call to update the progress bar states on page load
         updateProgress();
     </script>
 </body>

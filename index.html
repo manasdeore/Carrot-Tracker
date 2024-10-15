@@ -247,6 +247,22 @@
             }
         });
 
+        // Reset button functionality
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            // Reset all variables
+            medicineSigns = 0;
+            surgeryUnitSigns = 0;
+            surgeryMegaSigns = 0;
+            communityMeetupDone = false;
+            communitySigns = 0;
+
+            // Clear local storage
+            localStorage.clear();
+
+            // Update progress bars
+            updateProgress();
+        });
+
         // Initial call to update the progress bar states on page load
         updateProgress();
     </script>

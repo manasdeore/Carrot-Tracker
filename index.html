@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .progress-container {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        .progress-bar {
+            background-color: #ddd;
+            border-radius: 5px;
+            position: relative;
+            height: 30px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            width: 0%;
+            background-color: #76c7c0;
+            border-radius: 5px;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .sign {
+            margin-top: 20px;
+        }
+
+        .locked {
+            color: gray;
+            font-style: italic;
+        }
+
+        .unlocked {
+            font-weight: bold;
+            color: green;
+        }
+
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #76c7c0;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <h1>Progress Tracker</h1>
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress-bar-inner" id="progressBar">0%</div>
+        </div>
+    </div>
+
+    <div class="sign-container">
+        <div class="sign" id="sign1" class="locked">Sign 1: Locked</div>
+        <div class="sign" id="sign2" class="locked">Sign 2: Locked</div>
+        <div class="sign" id="sign3" class="locked">Sign 3: Locked</div>
+        <div class="sign" id="sign4" class="locked">Sign 4: Locked</div>
+        <div class="sign" id="sign5" class="locked">Sign 5: Locked</div>
+        <div class="sign" id="sign6" class="locked">Sign 6: Locked</div>
+        <div class="sign" id="sign7" class="locked">Sign 7: Locked</div>
+        <div class="sign" id="sign8" class="locked">Sign 8: Locked</div>
+        <div class="sign" id="sign9" class="locked">Sign 9: Locked</div>
+        <div class="sign" id="sign10" class="locked">Sign 10: Locked</div>
+    </div>
+
+    <button id="unlockBtn">Unlock Next Sign</button>
+
+    <script>
+        let signsUnlocked = 0;
+
+        function updateProgress() {
+            let progressPercentage = (signsUnlocked / 10) * 100;
+            document.getElementById('progressBar').style.width = progressPercentage + '%';
+            document.getElementById('progressBar').textContent = Math.floor(progressPercentage) + '%';
+        }
+
+        function unlockSign() {
+            signsUnlocked += 1;
+            if (signsUnlocked <= 10) {
+                document.getElementById('sign' + signsUnlocked).classList.remove('locked');
+                document.getElementById('sign' + signsUnlocked).classList.add('unlocked');
+                document.getElementById('sign' + signsUnlocked).textContent = 'Sign ' + signsUnlocked + ': Unlocked';
+                updateProgress();
+            }
+
+            if (signsUnlocked === 10) {
+                document.getElementById('unlockBtn').disabled = true;
+                document.getElementById('unlockBtn').textContent = 'All Signs Unlocked!';
+            }
+        }
+
+        document.getElementById('unlockBtn').addEventListener('click', unlockSign);
+    </script>
+</body>
+</html>

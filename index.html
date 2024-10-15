@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Progress Tracker</title>
+    <title>Custom Progress Tracker</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,6 +15,7 @@
         .progress-container {
             width: 80%;
             margin: 0 auto;
+            margin-bottom: 30px;
         }
 
         .progress-bar {
@@ -37,18 +38,9 @@
             font-weight: bold;
         }
 
-        .sign {
+        .task {
+            font-size: 18px;
             margin-top: 20px;
-        }
-
-        .locked {
-            color: gray;
-            font-style: italic;
-        }
-
-        .unlocked {
-            font-weight: bold;
-            color: green;
         }
 
         button {
@@ -70,52 +62,117 @@
 </head>
 <body>
     <h1>Progress Tracker</h1>
-    <div class="progress-container">
-        <div class="progress-bar">
-            <div class="progress-bar-inner" id="progressBar">0%</div>
+
+    <div class="task">
+        <h2>Medicine</h2>
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-bar-inner" id="medicineProgress">66%</div>
+            </div>
         </div>
+        <button id="medicineBtn">Complete a Medicine Sign</button>
     </div>
 
-    <div class="sign-container">
-        <div class="sign" id="sign1" class="locked">Sign 1: Locked</div>
-        <div class="sign" id="sign2" class="locked">Sign 2: Locked</div>
-        <div class="sign" id="sign3" class="locked">Sign 3: Locked</div>
-        <div class="sign" id="sign4" class="locked">Sign 4: Locked</div>
-        <div class="sign" id="sign5" class="locked">Sign 5: Locked</div>
-        <div class="sign" id="sign6" class="locked">Sign 6: Locked</div>
-        <div class="sign" id="sign7" class="locked">Sign 7: Locked</div>
-        <div class="sign" id="sign8" class="locked">Sign 8: Locked</div>
-        <div class="sign" id="sign9" class="locked">Sign 9: Locked</div>
-        <div class="sign" id="sign10" class="locked">Sign 10: Locked</div>
+    <div class="task">
+        <h2>Surgery Unit</h2>
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-bar-inner" id="surgeryUnitProgress">60%</div>
+            </div>
+        </div>
+        <button id="surgeryUnitBtn">Complete a Surgery Unit Sign</button>
     </div>
 
-    <button id="unlockBtn">Unlock Next Sign</button>
+    <div class="task">
+        <h2>Surgery Unit Mega Sign</h2>
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-bar-inner" id="surgeryMegaProgress">0%</div>
+            </div>
+        </div>
+        <button id="surgeryMegaBtn">Complete Mega Sign</button>
+    </div>
+
+    <div class="task">
+        <h2>Community Medicine Meetup</h2>
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-bar-inner" id="communityMeetupProgress">0%</div>
+            </div>
+        </div>
+        <button id="communityMeetupBtn">Mark Meetup Complete</button>
+    </div>
+
+    <div class="task">
+        <h2>Community Medicine</h2>
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-bar-inner" id="communityProgress">0%</div>
+            </div>
+        </div>
+        <button id="communityBtn">Complete a Community Medicine Sign</button>
+    </div>
 
     <script>
-        let signsUnlocked = 0;
+        let medicineSigns = 6;
+        let surgeryUnitSigns = 3;
+        let surgeryMegaSigns = 0;
+        let communityMeetupDone = false;
+        let communitySigns = 0;
 
         function updateProgress() {
-            let progressPercentage = (signsUnlocked / 10) * 100;
-            document.getElementById('progressBar').style.width = progressPercentage + '%';
-            document.getElementById('progressBar').textContent = Math.floor(progressPercentage) + '%';
+            document.getElementById('medicineProgress').style.width = (medicineSigns / 9) * 100 + '%';
+            document.getElementById('medicineProgress').textContent = Math.floor((medicineSigns / 9) * 100) + '%';
+
+            document.getElementById('surgeryUnitProgress').style.width = (surgeryUnitSigns / 5) * 100 + '%';
+            document.getElementById('surgeryUnitProgress').textContent = Math.floor((surgeryUnitSigns / 5) * 100) + '%';
+
+            document.getElementById('surgeryMegaProgress').style.width = (surgeryMegaSigns / 1) * 100 + '%';
+            document.getElementById('surgeryMegaProgress').textContent = Math.floor((surgeryMegaSigns / 1) * 100) + '%';
+
+            document.getElementById('communityMeetupProgress').style.width = communityMeetupDone ? '100%' : '0%';
+            document.getElementById('communityMeetupProgress').textContent = communityMeetupDone ? '100%' : '0%';
+
+            document.getElementById('communityProgress').style.width = (communitySigns / 2) * 100 + '%';
+            document.getElementById('communityProgress').textContent = Math.floor((communitySigns / 2) * 100) + '%';
         }
 
-        function unlockSign() {
-            signsUnlocked += 1;
-            if (signsUnlocked <= 10) {
-                document.getElementById('sign' + signsUnlocked).classList.remove('locked');
-                document.getElementById('sign' + signsUnlocked).classList.add('unlocked');
-                document.getElementById('sign' + signsUnlocked).textContent = 'Sign ' + signsUnlocked + ': Unlocked';
+        // Buttons' click events to increase progress
+        document.getElementById('medicineBtn').addEventListener('click', function() {
+            if (medicineSigns < 9) {
+                medicineSigns++;
                 updateProgress();
             }
+        });
 
-            if (signsUnlocked === 10) {
-                document.getElementById('unlockBtn').disabled = true;
-                document.getElementById('unlockBtn').textContent = 'All Signs Unlocked!';
+        document.getElementById('surgeryUnitBtn').addEventListener('click', function() {
+            if (surgeryUnitSigns < 5) {
+                surgeryUnitSigns++;
+                updateProgress();
             }
-        }
+        });
 
-        document.getElementById('unlockBtn').addEventListener('click', unlockSign);
+        document.getElementById('surgeryMegaBtn').addEventListener('click', function() {
+            if (surgeryMegaSigns < 1) {
+                surgeryMegaSigns++;
+                updateProgress();
+            }
+        });
+
+        document.getElementById('communityMeetupBtn').addEventListener('click', function() {
+            communityMeetupDone = true;
+            updateProgress();
+        });
+
+        document.getElementById('communityBtn').addEventListener('click', function() {
+            if (communitySigns < 2) {
+                communitySigns++;
+                updateProgress();
+            }
+        });
+
+        // Initialize progress bars based on initial values
+        updateProgress();
     </script>
 </body>
 </html>
